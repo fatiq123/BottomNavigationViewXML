@@ -14,13 +14,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var homeFragment: HomeFragment
-    private lateinit var favoritesFragment: FavoritesFragment
-    private lateinit var searchFragment: SearchFragment
+    private var homeFragment = HomeFragment()
+    private var favoritesFragment = FavoritesFragment()
+    private var searchFragment = SearchFragment()
 
-    val fragment = HomeFragment()
-    val fragment2 = FavoritesFragment()
-    val fragment3 = SearchFragment()
+    private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_nav_view)
 
 
+        /*bottomNavigationView.setOnItemSelectedListener {
 
-        bottomNavigationView.setOnItemSelectedListener {
             var fragment: Fragment? = null
             when (it.itemId) {
                 R.id.miHome -> {
@@ -44,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.miSearch -> {
                     fragment = SearchFragment()
                 }
+
             }
             supportFragmentManager
                 .beginTransaction()
@@ -51,6 +50,22 @@ class MainActivity : AppCompatActivity() {
                 .commit()
 
             return@setOnItemSelectedListener true
+        }*/
+
+        // Set the default fragment to be displayed
+        currentFragment = homeFragment
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, currentFragment!!)
+            .commit()
+
+        bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.miHome -> replaceFragment(homeFragment)
+                R.id.miFavorite -> replaceFragment(favoritesFragment)
+                R.id.miSearch -> replaceFragment(searchFragment)
+            }
+            true
         }
 
 
@@ -64,18 +79,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.miHome -> {
-                fragment
-            }
-
-            R.id.miFavorite -> {
-                fragment2
-            }
-
-            R.id.miSearch -> {
-                fragment3
-            }
-
+            R.id.miHome -> replaceFragment(homeFragment)
+            R.id.miFavorite -> replaceFragment(favoritesFragment)
+            R.id.miSearch -> replaceFragment(searchFragment)
             else -> Toast.makeText(
                 this@MainActivity,
                 "Please Select at-least one item",
@@ -84,5 +90,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun replaceFragment(fragment: Fragment) {
+        if (fragment != currentFragment) {
+            currentFragment = fragment
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.container, currentFragment!!)
+                .commit()
+        }
     }
 }
