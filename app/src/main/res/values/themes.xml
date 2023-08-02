@@ -8,10 +8,11 @@
     <style name="Theme.BottomNavigationView" parent="Base.Theme.BottomNavigationView" />
 
 
+
+    <!--This Theme is used to show Menu Items-->
     <style name="Theme.BottomNavigationView.Custom" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
 
         <item name="colorPrimary">@color/colorPrimary</item>
-
         <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
     </style>
 </resources>
